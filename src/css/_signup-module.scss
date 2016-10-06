@@ -1,0 +1,33 @@
+#signup-module-wrapper {
+	background-color: $white;
+	border-top: 1px solid lighten( $black, 60% );
+	border-bottom: 1px solid lighten( $black, 60% );
+	padding-top: 5em;
+	padding-bottom: 5em;
+	h1 {
+		font-family: $sans1;
+		font-size: 1em;
+		font-weight: 100;
+		letter-spacing: 0.15em;
+		margin-bottom: 2em;
+		text-transform: uppercase;
+	}
+	p {
+		font-size: 1em;
+		line-height: 2;
+		&:first-of-type {
+			&::first-line {
+				font-weight: 800;
+			}
+			&::first-letter {
+				color: $blue;
+				font-family: $serif;
+				font-size: 500%;
+				font-weight: 800;
+				float: left;
+				line-height: 0.75;
+				margin-right: 0.1em;
+			}
+		}
+	}
+}

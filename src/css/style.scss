@@ -1,0 +1,105 @@
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import '../../node_modules/font-awesome/scss/font-awesome.scss';
+
+$white: #ffffff;
+$off: lighten( #eceff1, 1% );
+$black: #373a3c;
+$blue: #5a76a8;
+$red: #9f746e;
+
+$sans1: "Montserrat";
+$sans2: "Merriweather Sans";
+$serif: "Merriweather";
+
+h1, h2, h3, h4, h5 {
+	font-family: $sans1;
+}
+
+p {
+	font-family: $serif;
+}
+
+a {
+	color: $blue;
+	&:hover {
+		color: lighten( $blue, 10% );
+	}
+}
+
+.columned {
+	-moz-column-count: 2;
+	-webkit-column-count: 2;
+	column-count: 2;
+	-moz-column-gap: 40px;
+	-webkit-column-gap: 40px;
+	column-gap: 40px;
+}
+@media all and ( max-width: 640px ) {
+	.columned {
+		-moz-column-count: 1;
+		-webkit-column-count: 1;
+		column-count: 1;		
+	}
+}
+
+.clear {
+	clear: both;
+}
+
+.btn {
+	border: none;
+	font-family: $sans1;
+	font-size: 0.75em;
+	font-weight: 100;
+	letter-spacing: 0.1em;
+	line-height: 1;
+	text-transform: uppercase;
+	transition: all 500ms;
+
+}
+.btn-primary {
+	background-color: lighten( $blue, 10% );
+	padding: 10px 20px;
+	&:hover {
+		background-color: $blue;
+		border: none;
+	}
+}
+.btn-secondary {
+	background: transparent;
+	background-color: transparent;
+	border: none;
+	box-sizing: border-box;
+	font-size: 0.75em;
+	letter-spacing: 0.1em;
+	padding: 0;
+	height: 1em;
+	&:hover {
+		background-color: transparent;
+		text-decoration: underline;
+	}
+	&:focus {
+		background: transparent;
+	}
+}
+
+body {
+	background-color: $off;
+	padding: 0;
+}
+
+.module-kicker {
+	font-size: 1em;
+	font-weight: 100;
+	letter-spacing: 0.1em;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+@import './persist-header';
+@import './overlay';
+@import './debate-module';
+@import './hero-module';
+@import './signup-module';
+@import './articles-module';
+@import './logos-module';

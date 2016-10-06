@@ -1,0 +1,89 @@
+#logos-module-wrapper {
+	background-color: $white;
+	padding-top: 5em;
+	h1 {
+		font-family: $sans1;
+		font-size: 1em;
+		font-weight: 100;
+		letter-spacing: 0.15em;
+		margin-bottom: 2em;
+		text-align: center;
+		text-transform: uppercase;
+	}
+}
+a.logo-wrapper {
+	box-sizing: border-box;
+	cursor: pointer;
+	display: block;
+	float: left;
+	padding-bottom: 15%;
+	width: 20%;
+	height: 0;
+}
+.logo {
+	background-color: $white;
+	position: relative;
+	padding-bottom: 75%;
+	width: 100%;
+	height: 0;
+	&:hover {
+		.logo-image {
+			filter: grayscale( 0% );
+		}
+	}
+	.logo-image {
+		background-size: contain;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		filter: grayscale( 100% ) blur( 0 );
+		padding-bottom: 50%;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate( -50%, -50% );
+		transition: filter 500ms;
+		width: 50%;
+		height: 0;
+	}
+}
+
+#media-lab-logo .logo-image {
+	background-image: url('../../img/logo_media_lab.png');
+}
+#twitter-logo .logo-image {
+	background-image: url('../../img/logo_twitter.png');
+	width: 25%;
+}
+#commission-on-presidential-debates-logo .logo-image {
+	background-image: url('../../img/logo_cpd.png');
+}
+#washington-post-logo .logo-image {
+	background-image: url('../../img/logo_wapo.png');
+}
+#wsj-logo .logo-image {
+	background-image: url('../../img/logo_wsj.png');
+}
+#fusion-logo .logo-image {
+	background-image: url('../../img/logo_fusion.png');
+	width: 25%;
+}
+#roper-center-logo .logo-image {
+	background-image: url('../../img/logo_roper_center.png');
+}
+#newseum-logo .logo-image {
+	background-image: url('../../img/logo_newseum.png');
+}
+#knight-foundation-logo .logo-image {
+	background-image: url('../../img/logo_knight_foundation.png');
+	width: 33%;
+}
+#bloomberg-news-logo .logo-image {
+	background-image: url('../../img/logo_bloomberg_news.png');
+}
+#cnn-politics-logo .logo-image {
+	background-image: url('../../img/logo_cnn_politics.png');
+}
+#lakana-logo .logo-image {
+	background-image: url('../../img/logo_lakana.png');
+	width: 33%;
+}

@@ -1,0 +1,108 @@
+#articles-module-wrapper {
+	padding-top: 5em;
+	padding-bottom: 5em;
+	#articles-wrapper {
+		margin-top: 5em;
+		margin-bottom: 5em;
+	}
+	article {
+		border-bottom: 2px solid lighten( $black, 60% );
+		color: $white;
+		overflow: hidden;
+		padding: 0;
+		position: relative;
+		transition: color 250ms;
+		height: 10em;
+		&:hover {
+			.image {
+				filter: blur( 2px );
+			}
+			.gloss {
+				background-color: transparent;
+				&.with-image {
+					background-color: transparentize( $white, 0.25 );
+				}
+			}
+			color: $black;
+			&.with-image {
+				color: $white;
+			}
+		}
+		&:first-child {
+			border-top: 2px solid lighten( $black, 60% );
+		}
+		.image {
+			background-size: cover;
+			background-position: 50% 50%;
+			filter: blur( 10px );
+			position: absolute;
+			top: 0;
+			left: 0;
+			transition: filter 250ms;
+			width: 100%;
+			height: 100%;			
+		}
+		.gloss {
+			background-color: transparentize( $black, 0.5 );
+			position: absolute;
+			top: 0;
+			left: 0;
+			transition: background-color 250ms;
+			width: 100%;
+			height: 100%;
+			&.with-image {
+				// background: linear-gradient( to top, transparentize( darken( $off, 100% ), 0.1 ) 0%, transparentize( darken( $off, 50% ), 0.25 ) 25%, transparentize( darken( $off, 0% ), 1 ) 100% );
+				background-color: transparentize( $black, 0.5 );
+			}
+		}
+		a {
+			cursor: pointer;
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+		}
+		h1 {
+			font-family: $serif;
+			font-size: 1.25em;
+			font-weight: 800;
+			letter-spacing: 0;
+			margin-bottom: 1em;
+			text-align: left;
+			text-transform: none;
+		}
+		h2 {
+			font-size: 0.75em;
+			&.article-publication {
+				font-family: $sans1;
+				font-weight: 100;
+				letter-spacing: 0.125em;
+				text-transform: uppercase;
+			}
+			&.article-author {
+				font-family: $serif;
+				font-weight: 800;
+			}
+		}
+	}
+	.inner-container {
+		box-sizing: border-box;
+		margin: 0 auto;
+		padding: 2em 20px 1em 20px;
+		position: absolute;
+		top: auto;
+		bottom: 0;
+		left: 50%;
+		transform: translate( -50%,0 );
+		width: 100%;
+		max-width: 640px;
+	}
+}
+#show-more-articles-column {
+	display: block;
+	float: none;
+	margin: 0 auto;
+}
