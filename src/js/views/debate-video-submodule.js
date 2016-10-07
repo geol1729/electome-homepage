@@ -28,6 +28,7 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
+						TOME.app.trigger('debate:video:ready');
 					}.bind( this )
 				}
 			} )
@@ -51,11 +52,11 @@ module.exports = Marionette.View.extend( {
 	},
 
 	play: function() {
-		console.log("play")
+		this._viz.player.playVideo();
 	},
 
 	pause: function() {
-		console.log("pause")
+		this._viz.player.pauseVideo();
 	}
 
 } );

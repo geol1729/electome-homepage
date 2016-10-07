@@ -44117,7 +44117,6 @@ module.exports = Marionette.View.extend( {
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
-
 			dragging = true;
 
 			if ( playing ) {
@@ -44125,11 +44124,10 @@ module.exports = Marionette.View.extend( {
 			}
 
 			TOME.app.trigger( 'debate:video:pause' );
-
+			
 		}.bind( this ) );
 
 		this.$el.find( '.controls' ).on( 'click', function () {
-
 			if ( active ) {
 
 				playing = !playing;
@@ -44144,6 +44142,10 @@ module.exports = Marionette.View.extend( {
 			}
 
 		}.bind( this ) );
+
+		this.listenTo( TOME.app, 'debate:video:ready', function() {
+			active = true;
+		});
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
@@ -44244,6 +44246,7 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
+						TOME.app.trigger('debate:video:ready');
 					}.bind( this )
 				}
 			} )
@@ -44267,11 +44270,11 @@ module.exports = Marionette.View.extend( {
 	},
 
 	play: function() {
-		console.log("play")
+		this._viz.player.playVideo();
 	},
 
 	pause: function() {
-		console.log("pause")
+		this._viz.player.pauseVideo();
 	}
 
 } );

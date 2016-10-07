@@ -62,7 +62,6 @@ module.exports = Marionette.View.extend( {
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
-
 			dragging = true;
 
 			if ( playing ) {
@@ -70,11 +69,10 @@ module.exports = Marionette.View.extend( {
 			}
 
 			TOME.app.trigger( 'debate:video:pause' );
-
+			
 		}.bind( this ) );
 
 		this.$el.find( '.controls' ).on( 'click', function () {
-
 			if ( active ) {
 
 				playing = !playing;
@@ -89,6 +87,10 @@ module.exports = Marionette.View.extend( {
 			}
 
 		}.bind( this ) );
+
+		this.listenTo( TOME.app, 'debate:video:ready', function() {
+			active = true;
+		});
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
