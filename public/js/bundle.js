@@ -43479,7 +43479,7 @@ return __p;
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div class="controls">\n\t<div class="play">▶︎</div>\n\t<div class="pause">⎮⎮</div>\n</div>\n<div id="debate-viz-scrubber-area">\n\t<div id="debate-viz-scrubber-played-rect"></div>\n\t<div id="debate-viz-scrubber-bar"></div>\n</div>';
+__p+='<div data-active="false" class="controls">\n\t<div class="play">▶︎</div>\n\t<div class="pause">⎮⎮</div>\n</div>\n<div id="debate-viz-scrubber-area">\n\t<div id="debate-viz-scrubber-played-rect"></div>\n\t<div id="debate-viz-scrubber-bar"></div>\n</div>';
 }
 return __p;
 };
@@ -44066,6 +44066,7 @@ module.exports = Marionette.View.extend( {
 	template: debateScrubberSubmoduleTemplate,
 
 	onAttach: function () {
+		var controls = this.$el.find(".controls");
 		var scrubber = this.$el.find( '#debate-viz-scrubber-bar' );
 		var scrubberPlayedRect = this.$el.find( '#debate-viz-scrubber-played-rect' );
 		var scrubberArea = this.$el.find( '#debate-viz-scrubber-area' );
@@ -44124,15 +44125,15 @@ module.exports = Marionette.View.extend( {
 			}
 
 			TOME.app.trigger( 'debate:video:pause' );
-			
+
 		}.bind( this ) );
 
-		this.$el.find( '.controls' ).on( 'click', function () {
+		controls.on( 'click', function () {
 			if ( active ) {
 
 				playing = !playing;
 
-				this.$el.find( '.controls' ).toggleClass( 'playing' );
+				controls.toggleClass( 'playing' );
 
 				if ( playing ) {
 					TOME.app.trigger( 'debate:video:play' );
@@ -44145,7 +44146,8 @@ module.exports = Marionette.View.extend( {
 
 		this.listenTo( TOME.app, 'debate:video:ready', function() {
 			active = true;
-		});
+			controls.attr("data-active", true);
+		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
@@ -44276,6 +44278,8 @@ module.exports = Marionette.View.extend( {
 	},
 
 	playRAF: function() {
+		console.log("PLAY RAF")
+		console.log(this._viz.player.getCurrentTime())
 		TOME.app.trigger('debate:time:update', {
 			source: 'video', to: this._viz.player.getCurrentTime()
 		});
@@ -44288,9 +44292,9 @@ module.exports = Marionette.View.extend( {
 	play: function() {
 		this._viz.player.playVideo();
 
-		this.playRAFID = this.playRAF();
-
 		this.playing = true;
+
+		this.playRAFID = this.playRAF();
 	},
 
 	pause: function() {

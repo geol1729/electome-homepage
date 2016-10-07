@@ -58,6 +58,8 @@ module.exports = Marionette.View.extend( {
 	},
 
 	playRAF: function() {
+		console.log("PLAY RAF")
+		console.log(this._viz.player.getCurrentTime())
 		TOME.app.trigger('debate:time:update', {
 			source: 'video', to: this._viz.player.getCurrentTime()
 		});
@@ -70,9 +72,9 @@ module.exports = Marionette.View.extend( {
 	play: function() {
 		this._viz.player.playVideo();
 
-		this.playRAFID = this.playRAF();
-
 		this.playing = true;
+
+		this.playRAFID = this.playRAF();
 	},
 
 	pause: function() {

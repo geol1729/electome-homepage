@@ -11,6 +11,7 @@ module.exports = Marionette.View.extend( {
 	template: debateScrubberSubmoduleTemplate,
 
 	onAttach: function () {
+		var controls = this.$el.find(".controls");
 		var scrubber = this.$el.find( '#debate-viz-scrubber-bar' );
 		var scrubberPlayedRect = this.$el.find( '#debate-viz-scrubber-played-rect' );
 		var scrubberArea = this.$el.find( '#debate-viz-scrubber-area' );
@@ -69,15 +70,15 @@ module.exports = Marionette.View.extend( {
 			}
 
 			TOME.app.trigger( 'debate:video:pause' );
-			
+
 		}.bind( this ) );
 
-		this.$el.find( '.controls' ).on( 'click', function () {
+		controls.on( 'click', function () {
 			if ( active ) {
 
 				playing = !playing;
 
-				this.$el.find( '.controls' ).toggleClass( 'playing' );
+				controls.toggleClass( 'playing' );
 
 				if ( playing ) {
 					TOME.app.trigger( 'debate:video:play' );
@@ -90,7 +91,8 @@ module.exports = Marionette.View.extend( {
 
 		this.listenTo( TOME.app, 'debate:video:ready', function() {
 			active = true;
-		});
+			controls.attr("data-active", true);
+		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
