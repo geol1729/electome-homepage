@@ -18,9 +18,7 @@ module.exports = Marionette.View.extend( {
 
 		var dragging;
 		var mouseX;
-		var interruptedPlay = false;
 		var active = false;
-		var playing = false;
 		var scrubberWidth = scrubber.width();
 		var scrubberAreaWidth = scrubberArea.width();
 		var scrubberAreaOffsetLeft = scrubberArea[0].getBoundingClientRect().left;
@@ -47,44 +45,22 @@ module.exports = Marionette.View.extend( {
 
 		window.addEventListener( 'mouseup', function () {
 			if(dragging) {
-				if ( interruptedPlay ) {
-
-					TOME.app.trigger( 'debate:video:play' );
-
-					interruptedPlay = false;
-
-				} else {
-
-					TOME.app.trigger( 'debate:video:pause' );
-				}				
+				TOME.app.trigger('debate:scrubber:mouseup');			
 			}
-
 			dragging = false;
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
 			dragging = true;
 
-			if ( playing ) {
-				interruptedPlay = true;
-			}
-
-			TOME.app.trigger( 'debate:video:pause' );
+			TOME.app.trigger('debate:scrubber:mousedown');
 
 		}.bind( this ) );
 
 		controls.on( 'click', function () {
 			if ( active ) {
-
-				playing = !playing;
-
 				controls.toggleClass( 'playing' );
-
-				if ( playing ) {
-					TOME.app.trigger( 'debate:video:play' );
-				} else {
-					TOME.app.trigger( 'debate:video:pause' );
-				}
+				TOME.app.trigger('debate:controls:click');
 			}
 
 		}.bind( this ) );

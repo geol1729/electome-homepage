@@ -43879,6 +43879,10 @@ module.exports = Marionette.View.extend( {
 		'click #debate-header-back-button': 'back'
 	},
 
+	playing: false,
+
+	interruptedPlay: false,
+
 	back: function ( e ) {
 		e.preventDefault();
 		Backbone.history.navigate( '/' );
@@ -44049,6 +44053,33 @@ module.exports = Marionette.View.extend( {
 
 		}.bind( this ) );
 
+		this.listenTo(TOME.app, 'debate:scrubber:mouseup', function() {
+			if(this.interruptedPlay) {
+				TOME.app.trigger( 'debate:video:play' );
+				this.interruptedPlay = false;
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:scrubber:mousedown', function() {
+			if(this.playing === true) {
+				this.interruptedPlay = true;
+			}
+
+			TOME.app.trigger( 'debate:video:pause' );
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:controls:click', function() {
+			this.playing = !this.playing;
+
+			if(this.playing) {
+				TOME.app.trigger( 'debate:video:play' );
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
+
 	}
 
 } );
@@ -44073,9 +44104,7 @@ module.exports = Marionette.View.extend( {
 
 		var dragging;
 		var mouseX;
-		var interruptedPlay = false;
 		var active = false;
-		var playing = false;
 		var scrubberWidth = scrubber.width();
 		var scrubberAreaWidth = scrubberArea.width();
 		var scrubberAreaOffsetLeft = scrubberArea[0].getBoundingClientRect().left;
@@ -44102,44 +44131,22 @@ module.exports = Marionette.View.extend( {
 
 		window.addEventListener( 'mouseup', function () {
 			if(dragging) {
-				if ( interruptedPlay ) {
-
-					TOME.app.trigger( 'debate:video:play' );
-
-					interruptedPlay = false;
-
-				} else {
-
-					TOME.app.trigger( 'debate:video:pause' );
-				}				
+				TOME.app.trigger('debate:scrubber:mouseup');			
 			}
-
 			dragging = false;
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
 			dragging = true;
 
-			if ( playing ) {
-				interruptedPlay = true;
-			}
-
-			TOME.app.trigger( 'debate:video:pause' );
+			TOME.app.trigger('debate:scrubber:mousedown');
 
 		}.bind( this ) );
 
 		controls.on( 'click', function () {
 			if ( active ) {
-
-				playing = !playing;
-
 				controls.toggleClass( 'playing' );
-
-				if ( playing ) {
-					TOME.app.trigger( 'debate:video:play' );
-				} else {
-					TOME.app.trigger( 'debate:video:pause' );
-				}
+				TOME.app.trigger('debate:controls:click');
 			}
 
 		}.bind( this ) );

@@ -28,6 +28,10 @@ module.exports = Marionette.View.extend( {
 		'click #debate-header-back-button': 'back'
 	},
 
+	playing: false,
+
+	interruptedPlay: false,
+
 	back: function ( e ) {
 		e.preventDefault();
 		Backbone.history.navigate( '/' );
@@ -197,6 +201,33 @@ module.exports = Marionette.View.extend( {
 			TOME.app.trigger( 'debate:time:update', { source: 'sparkline', to: timestamp } );
 
 		}.bind( this ) );
+
+		this.listenTo(TOME.app, 'debate:scrubber:mouseup', function() {
+			if(this.interruptedPlay) {
+				TOME.app.trigger( 'debate:video:play' );
+				this.interruptedPlay = false;
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:scrubber:mousedown', function() {
+			if(this.playing === true) {
+				this.interruptedPlay = true;
+			}
+
+			TOME.app.trigger( 'debate:video:pause' );
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:controls:click', function() {
+			this.playing = !this.playing;
+
+			if(this.playing) {
+				TOME.app.trigger( 'debate:video:play' );
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
 
 	}
 
