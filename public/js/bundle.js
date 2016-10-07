@@ -44315,6 +44315,7 @@ module.exports = Marionette.View.extend( {
 	scrubTo: function(params) {
 		if(params.source !== 'video') {
 			this._viz.player.seekTo(params.to);
+			this.pause();
 		}
 	},
 
