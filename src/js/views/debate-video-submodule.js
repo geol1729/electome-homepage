@@ -6,6 +6,10 @@ module.exports = Marionette.View.extend( {
 
 	className: 'submodule',
 
+	playRAFID: null,
+
+	playing: false,
+
 	template: debateVideoSubmoduleTemplate,
 
 	_createYouTubeScript: function () {
@@ -49,14 +53,32 @@ module.exports = Marionette.View.extend( {
 
 		this._createYouTubeScript();
 
+		this.playRAF = this.playRAF.bind(this);
+
+	},
+
+	playRAF: function() {
+		TOME.app.trigger('debate:time:update', {
+			source: 'video', to: this._viz.player.getCurrentTime()
+		});
+
+		if(this.playing) {
+			this.playRAFID = requestAnimationFrame(this.playRAF);
+		}
 	},
 
 	play: function() {
 		this._viz.player.playVideo();
+
+		this.playRAFID = this.playRAF();
+
+		this.playing = true;
 	},
 
 	pause: function() {
 		this._viz.player.pauseVideo();
+
+		this.playing = false;
 	}
 
 } );
