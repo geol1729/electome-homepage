@@ -44089,6 +44089,14 @@ module.exports = Marionette.View.extend( {
 			}
 		}.bind(this));
 
+		this.listenTo(TOME.app, 'debate:video:play', function() {
+			this.playing = true;
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:video:pause', function() {
+			this.playing = false;
+		}.bind(this));
+
 	}
 
 } );
@@ -44307,7 +44315,6 @@ module.exports = Marionette.View.extend( {
 	scrubTo: function(params) {
 		if(params.source !== 'video') {
 			this._viz.player.seekTo(params.to);
-			this.pause();
 		}
 	},
 
