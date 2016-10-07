@@ -44265,6 +44265,8 @@ module.exports = Marionette.View.extend( {
 		this.listenTo(TOME.app, 'debate:video:play', this.play);
 
 		this.listenTo(TOME.app, 'debate:video:pause', this.pause);
+
+		this.listenTo(TOME.app, 'debate:time:update', this.scrubTo)
 	},
 
 	initialize: function () {
@@ -44278,14 +44280,18 @@ module.exports = Marionette.View.extend( {
 	},
 
 	playRAF: function() {
-		console.log("PLAY RAF")
-		console.log(this._viz.player.getCurrentTime())
 		TOME.app.trigger('debate:time:update', {
 			source: 'video', to: this._viz.player.getCurrentTime()
 		});
 
 		if(this.playing) {
 			this.playRAFID = requestAnimationFrame(this.playRAF);
+		}
+	},
+
+	scrubTo: function(params) {
+		if(params.source !== 'video') {
+			this._viz.player.seekTo(params.to);
 		}
 	},
 
