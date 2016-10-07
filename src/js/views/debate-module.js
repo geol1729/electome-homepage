@@ -133,13 +133,13 @@ module.exports = Marionette.View.extend( {
 
 			} );
 
-			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
-
 			response.trending.forEach( function( d ) {
 				if ( typeof xmax === 'undefined' || moment( d.end_time ).isAfter( moment( xmax ) ) ) {
 					xmax = d.end_time;
 				}
 			} );
+
+			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
 
 			this._createClusterDropdown( response.trending );
 
@@ -147,8 +147,12 @@ module.exports = Marionette.View.extend( {
 
 			this._viz.els.scroller[0].addEventListener( 'wheel', function ( e ) {
 				if ( Math.abs( e.deltaX ) > Math.abs( e.deltaY ) ) {
+					var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+					var scrollLeft = this._viz.els.scroller.scrollLeft()
 
-					var timestamp = this._viz.els.scroller.scrollLeft() / ( this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width() ) * this._viz.secondsRange;
+					var fraction = scrollLeft / scrollWidth
+
+					var timestamp = fraction * this._viz.secondsRange;
 
 					TOME.app.trigger( 'debate:time:update', { source: 'wheel', to: timestamp } );
 
@@ -173,6 +177,14 @@ module.exports = Marionette.View.extend( {
 			intervalWidth: this._viz.intervalWidth,
 			horizontalPadding: this._viz.horizontalPadding
 		};
+
+		this.listenTo( TOME.app, 'debate:time:update', function(params) {
+			if(params.source !== 'wheel') {
+				var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+
+				this._viz.els.scroller[0].scrollLeft = Math.max(0, Math.min(scrollWidth, params.to / this._viz.secondsRange) * scrollWidth)
+			}
+		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:sparkline:activated', function ( params ) {
 

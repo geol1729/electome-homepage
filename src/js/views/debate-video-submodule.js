@@ -28,7 +28,6 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
-						this.
 					}.bind( this )
 				}
 			} )
@@ -37,12 +36,26 @@ module.exports = Marionette.View.extend( {
 
 	},
 
+	onAttach: function() {
+		this.listenTo(TOME.app, 'debate:video:play', this.play);
+
+		this.listenTo(TOME.app, 'debate:video:pause', this.pause);
+	},
+
 	initialize: function () {
 
 		this._viz = {};
 
 		this._createYouTubeScript();
 
+	},
+
+	play: function() {
+		console.log("play")
+	},
+
+	pause: function() {
+		console.log("pause")
 	}
 
 } );
