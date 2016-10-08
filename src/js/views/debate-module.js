@@ -213,12 +213,13 @@ module.exports = Marionette.View.extend( {
 		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:sparkline:activated', function ( params ) {
-
+			var scrollWidth = this._viz.els.scroller[0].scrollWidth
+			var secondWidth = scrollWidth / this._viz.secondsRange
 			var scrollerLeft = this._viz.els.scroller[0].getBoundingClientRect().left;
 			var left = params.sparklineLeft - scrollerLeft + this._viz.els.scroller[0].scrollLeft;
-			this._viz.els.scroller[0].scrollLeft = left;
+			this._viz.els.scroller[0].scrollLeft = left - 30 * secondWidth;
 
-			var timestamp = this._viz.els.scroller.scrollLeft() / ( this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width() ) * this._viz.secondsRange;
+			var timestamp = this._viz.els.scroller.scrollLeft() / ( scrollWidth - this._viz.els.scroller.width() ) * this._viz.secondsRange;
 
 			TOME.app.trigger( 'debate:time:update', { source: 'sparkline', to: timestamp } );
 
