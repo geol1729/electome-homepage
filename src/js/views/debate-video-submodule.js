@@ -28,7 +28,6 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
-						this.
 					}.bind( this )
 				}
 			} )
