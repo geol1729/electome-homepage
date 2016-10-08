@@ -6,6 +6,10 @@ module.exports = Marionette.View.extend( {
 
 	className: 'submodule',
 
+	playRAFID: null,
+
+	playing: false,
+
 	template: debateVideoSubmoduleTemplate,
 
 	_createYouTubeScript: function () {
@@ -28,6 +32,7 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
+						TOME.app.trigger('debate:video:ready');
 					}.bind( this )
 				}
 			} )
@@ -36,12 +41,52 @@ module.exports = Marionette.View.extend( {
 
 	},
 
+	onAttach: function() {
+		this.listenTo(TOME.app, 'debate:video:play', this.play);
+
+		this.listenTo(TOME.app, 'debate:video:pause', this.pause);
+
+		this.listenTo(TOME.app, 'debate:time:update', this.scrubTo)
+	},
+
 	initialize: function () {
 
 		this._viz = {};
 
 		this._createYouTubeScript();
 
+		this.playRAF = this.playRAF.bind(this);
+
+	},
+
+	playRAF: function() {
+		TOME.app.trigger('debate:time:update', {
+			source: 'video', to: this._viz.player.getCurrentTime()
+		});
+		if(this.playing === true) {
+			this.playRAFID = requestAnimationFrame(this.playRAF);
+		}
+	},
+
+	scrubTo: function(params) {
+		if(params.source !== 'video') {
+			this._viz.player.seekTo(params.to);
+			this.pause();
+		}
+	},
+
+	play: function() {
+		this._viz.player.playVideo();
+
+		this.playing = true;
+
+		this.playRAFID = this.playRAF();
+	},
+
+	pause: function() {
+		this._viz.player.pauseVideo();
+
+		this.playing = false;
 	}
 
 } );

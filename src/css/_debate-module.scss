@@ -206,15 +206,26 @@
 		text-align: center;
 		width: 50px;
 		height: 50px;
+		&[data-active="false"] {
+			opacity: 0;
+		}
+		&.playing {
+			.play {
+				display: none;
+			}
+		}
+		&:not(.playing) {
+			.pause {
+				display: none;
+			}			
+		}
+		.pause {
+			font-size: 20px;
+			line-height: 2.5;
+		}
 		.play, .pause {
 			width: 50px;
 			height: 50px;
-		}
-		.play {
-			display: block;
-		}
-		.pause {
-			display: none;
 		}
 	}
 	#debate-viz-scrubber-area {

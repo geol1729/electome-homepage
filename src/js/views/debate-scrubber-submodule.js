@@ -11,18 +11,16 @@ module.exports = Marionette.View.extend( {
 	template: debateScrubberSubmoduleTemplate,
 
 	onAttach: function () {
-
+		var controls = this.$el.find(".controls");
 		var scrubber = this.$el.find( '#debate-viz-scrubber-bar' );
 		var scrubberPlayedRect = this.$el.find( '#debate-viz-scrubber-played-rect' );
 		var scrubberArea = this.$el.find( '#debate-viz-scrubber-area' );
 
 		var dragging;
 		var mouseX;
-		var interruptedPlay = false;
 		var active = false;
-		var playing = false;
 		var scrubberWidth = scrubber.width();
-		var scrubberAreaWidth = scrubberArea.width() - 15;
+		var scrubberAreaWidth = scrubberArea.width();
 		var scrubberAreaOffsetLeft = scrubberArea[0].getBoundingClientRect().left;
 		var totalSeconds;
 
@@ -46,51 +44,31 @@ module.exports = Marionette.View.extend( {
 		}.bind( this ) );
 
 		window.addEventListener( 'mouseup', function () {
-
-			dragging = false;
-
-			if ( interruptedPlay ) {
-
-				TOME.app.trigger( 'debate:video:play' );
-
-				interruptedPlay = false;
-
-			} else {
-
-				TOME.app.trigger( 'debate:video:pause' );
-
+			if(dragging) {
+				TOME.app.trigger('debate:scrubber:mouseup');			
 			}
-
+			dragging = false;
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
-
 			dragging = true;
 
-			if ( playing ) {
-				interruptedPlay = true;
-			}
-
-			TOME.app.trigger( 'debate:video:pause' );
+			TOME.app.trigger('debate:scrubber:mousedown');
 
 		}.bind( this ) );
 
-		this.$el.find( '.controls' ).on( 'click', function () {
-
+		controls.on( 'click', function () {
 			if ( active ) {
-
-				playing = !playing;
-
-				this.$el.find( '.controls' ).toggleClass( 'playing' );
-
-				if ( playing ) {
-					TOME.app.trigger( 'debate:video:play' );
-				} else {
-					TOME.app.trigger( 'debate:video:pause' );
-				}
+				controls.toggleClass( 'playing' );
+				TOME.app.trigger('debate:controls:click');
 			}
 
 		}.bind( this ) );
+
+		this.listenTo( TOME.app, 'debate:video:ready', function() {
+			active = true;
+			controls.attr("data-active", true);
+		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
@@ -100,6 +78,7 @@ module.exports = Marionette.View.extend( {
 		this.listenTo( TOME.app, 'debate:time:update', function ( params ) {
 			if ( params.source !== 'scrubber' ) {
 				var left = Math.max( 0, Math.min( scrubberAreaWidth - scrubberWidth, ( params.to / totalSeconds ) * scrubberAreaWidth ) );
+
 				scrubber.css( 'left', left );
 				scrubberPlayedRect.css( 'width', left );
 			}

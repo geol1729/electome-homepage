@@ -28,6 +28,10 @@ module.exports = Marionette.View.extend( {
 		'click #debate-header-back-button': 'back'
 	},
 
+	playing: false,
+
+	interruptedPlay: false,
+
 	back: function ( e ) {
 		e.preventDefault();
 		Backbone.history.navigate( '/' );
@@ -104,7 +108,6 @@ module.exports = Marionette.View.extend( {
 	},
 
 	onAttach: function () {
-
 		this._viz.els.title = this.$el.find( '#debate-viz-title' );
 		this._viz.els.subtitle = this.$el.find( '#debate-viz-subtitle' );
 		this._viz.els.scroller =this.$el.find( '#debate-viz-scroller' );
@@ -133,13 +136,13 @@ module.exports = Marionette.View.extend( {
 
 			} );
 
-			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
-
 			response.trending.forEach( function( d ) {
 				if ( typeof xmax === 'undefined' || moment( d.end_time ).isAfter( moment( xmax ) ) ) {
 					xmax = d.end_time;
 				}
 			} );
+
+			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
 
 			this._createClusterDropdown( response.trending );
 
@@ -147,19 +150,46 @@ module.exports = Marionette.View.extend( {
 
 			this._viz.els.scroller[0].addEventListener( 'wheel', function ( e ) {
 				if ( Math.abs( e.deltaX ) > Math.abs( e.deltaY ) ) {
+					var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+					var scrollLeft = this._viz.els.scroller.scrollLeft()
 
-					var timestamp = this._viz.els.scroller.scrollLeft() / ( this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width() ) * this._viz.secondsRange;
+					var fraction = scrollLeft / scrollWidth
+
+					var timestamp = fraction * this._viz.secondsRange;
+
+					this.scrub();
 
 					TOME.app.trigger( 'debate:time:update', { source: 'wheel', to: timestamp } );
 
 				}
 			}.bind(this));
 
+			this._viz.els.scroller[0].addEventListener('wheel', _.debounce(this.scrubEnd, 150));
+
 		}.bind( this ) );
 
 	},
 
+	scrub: function() {
+		if(this.playing === true) {
+			this.interruptedPlay = true;
+		}
+
+		TOME.app.trigger( 'debate:video:pause' );
+	},
+
+	scrubEnd: function() {
+		if(this.interruptedPlay) {
+			TOME.app.trigger( 'debate:video:play' );
+			this.interruptedPlay = false;
+		} else {
+			TOME.app.trigger( 'debate:video:pause' );
+		}
+	},
+
 	initialize: function () {
+		this.scrub = this.scrub.bind(this);
+		this.scrubEnd = this.scrubEnd.bind(this);
 
 		this._viz = {
 			url: 'data/trends-1.json',
@@ -174,6 +204,14 @@ module.exports = Marionette.View.extend( {
 			horizontalPadding: this._viz.horizontalPadding
 		};
 
+		this.listenTo( TOME.app, 'debate:time:update', function(params) {
+			if(params.source !== 'wheel') {
+				var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+
+				this._viz.els.scroller[0].scrollLeft = Math.max(0, Math.min(scrollWidth, params.to / this._viz.secondsRange) * scrollWidth)
+			}
+		}.bind(this));
+
 		this.listenTo( TOME.app, 'debate:sparkline:activated', function ( params ) {
 
 			var scrollerLeft = this._viz.els.scroller[0].getBoundingClientRect().left;
@@ -185,6 +223,28 @@ module.exports = Marionette.View.extend( {
 			TOME.app.trigger( 'debate:time:update', { source: 'sparkline', to: timestamp } );
 
 		}.bind( this ) );
+
+		this.listenTo(TOME.app, 'debate:scrubber:mouseup', this.scrubEnd);
+
+		this.listenTo(TOME.app, 'debate:scrubber:mousedown', this.scrub);
+
+		this.listenTo(TOME.app, 'debate:controls:click', function() {
+			this.playing = !this.playing;
+
+			if(this.playing) {
+				TOME.app.trigger( 'debate:video:play' );
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:video:play', function() {
+			this.playing = true;
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:video:pause', function() {
+			this.playing = false;
+		}.bind(this));
 
 	}
 

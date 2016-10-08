@@ -43474,7 +43474,7 @@ return __p;
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div id="debate-module-wrapper" class="module-wrapper">\n\t<header id="debate-header">\n\t\t<a id="debate-header-back-button" href="/" class="capture btn btn-primary">Go back.</a>\n\t\t<h1><span class="important">The Electome social pulse</span> <span class="less-important">how did Twitter watch the debates?</h1>\n\t\t<div class="dropdown">\n\t\t\t<button class="btn dropdown-toggle" id="debate-header-dropdown-toggle" data-toggle="dropdown" type="button">Select a debate.</button>\n\t\t\t<div class="dropdown-menu" id="debate-header-dropdown" aria-labelledby="debate-header-dropdown-toggle">\n\t\t\t\t<p id="debate-header-dropdown-p1" class="dropdown-item">The first presidential debate at Hofstra University</p>\n\t\t\t\t<p id="debate-header-dropdown-vp1" class="dropdown-item">The vice-presidential debate at Longwood University</p>\n\t\t\t</div>\n\t\t</div>\n\n\t</header>\n\t<div id="debate-module-guts">\n\t\t<div id="debate-viz-wrapper">\n\t\t\t<header id="debate-viz-header">\n\t\t\t\t<div id="debate-viz-dropdown-wrapper" class="dropdown">\n\t\t\t\t\t<button class="btn btn-small dropdown-toggle" id="debate-viz-dropdown-toggle" data-toggle="dropdown" type="button">Select an event.</button>\n\t\t\t\t\t<div class="dropdown-menu" id="debate-viz-dropdown" aria-labelledby="debate-viz-dropdown-toggle"></div>\n\t\t\t\t</div>\n\t\t\t\t<h3 class="kicker">trending topic</h3>\n\t\t\t\t<h1 id="debate-viz-title"></h1>\n\t\t\t\t<h3 class="kicker">headline tweet</h3>\n\t\t\t\t<h2 id="debate-viz-subtitle"></h2>\n\t\t\t</header>\n\t\t\t<div id="debate-viz-video-wrapper"></div>\n\t\t\t<div id="debate-viz-scroller">\n\t\t\t\t<div id="debate-viz-viz-wrapper"></div>\n\t\t\t</div>\n\t\t\t<div id="debate-viz-scrubber-wrapper"></div>\n\t\t</div>\n\t\t<div id="debate-viz-tweets-sidebar-wrapper"></div>\n\t</div>\n</div>';
+__p+='<div id="debate-module-wrapper" class="module-wrapper">\n\t<header id="debate-header">\n\t\t<a id="debate-header-back-button" href="/" class="capture btn btn-primary">Go back.</a>\n\t\t<h1><span class="important">The Electome social pulse</span> <span class="less-important">how did Twitter watch the debates?</h1>\n\t\t<div style="display: none" class="dropdown">\n\t\t\t<button class="btn dropdown-toggle" id="debate-header-dropdown-toggle" data-toggle="dropdown" type="button">Select a debate.</button>\n\t\t\t<div class="dropdown-menu" id="debate-header-dropdown" aria-labelledby="debate-header-dropdown-toggle">\n\t\t\t\t<p id="debate-header-dropdown-p1" class="dropdown-item">The first presidential debate at Hofstra University</p>\n\t\t\t\t<p id="debate-header-dropdown-vp1" class="dropdown-item">The vice-presidential debate at Longwood University</p>\n\t\t\t</div>\n\t\t</div>\n\n\t</header>\n\t<div id="debate-module-guts">\n\t\t<div id="debate-viz-wrapper">\n\t\t\t<header id="debate-viz-header">\n\t\t\t\t<div id="debate-viz-dropdown-wrapper" class="dropdown">\n\t\t\t\t\t<button class="btn btn-small dropdown-toggle" id="debate-viz-dropdown-toggle" data-toggle="dropdown" type="button">Select an event.</button>\n\t\t\t\t\t<div class="dropdown-menu" id="debate-viz-dropdown" aria-labelledby="debate-viz-dropdown-toggle"></div>\n\t\t\t\t</div>\n\t\t\t\t<h3 class="kicker">trending topic</h3>\n\t\t\t\t<h1 id="debate-viz-title"></h1>\n\t\t\t\t<h3 class="kicker">headline tweet</h3>\n\t\t\t\t<h2 id="debate-viz-subtitle"></h2>\n\t\t\t</header>\n\t\t\t<div id="debate-viz-video-wrapper"></div>\n\t\t\t<div id="debate-viz-scroller">\n\t\t\t\t<div id="debate-viz-viz-wrapper"></div>\n\t\t\t</div>\n\t\t\t<div id="debate-viz-scrubber-wrapper"></div>\n\t\t</div>\n\t\t<div id="debate-viz-tweets-sidebar-wrapper"></div>\n\t</div>\n</div>';
 }
 return __p;
 };
@@ -43483,7 +43483,7 @@ return __p;
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div class="controls">\n\t<div class="play">▶︎</div>\n\t<div class="pause">⎮⎮</div>\n</div>\n<div id="debate-viz-scrubber-area">\n\t<div id="debate-viz-scrubber-played-rect"></div>\n\t<div id="debate-viz-scrubber-bar"></div>\n</div>';
+__p+='<div data-active="false" class="controls">\n\t<div class="play">▶︎</div>\n\t<div class="pause">⎮⎮</div>\n</div>\n<div id="debate-viz-scrubber-area">\n\t<div id="debate-viz-scrubber-played-rect"></div>\n\t<div id="debate-viz-scrubber-bar"></div>\n</div>';
 }
 return __p;
 };
@@ -43883,6 +43883,10 @@ module.exports = Marionette.View.extend( {
 		'click #debate-header-back-button': 'back'
 	},
 
+	playing: false,
+
+	interruptedPlay: false,
+
 	back: function ( e ) {
 		e.preventDefault();
 		Backbone.history.navigate( '/' );
@@ -43959,7 +43963,6 @@ module.exports = Marionette.View.extend( {
 	},
 
 	onAttach: function () {
-
 		this._viz.els.title = this.$el.find( '#debate-viz-title' );
 		this._viz.els.subtitle = this.$el.find( '#debate-viz-subtitle' );
 		this._viz.els.scroller =this.$el.find( '#debate-viz-scroller' );
@@ -43988,13 +43991,13 @@ module.exports = Marionette.View.extend( {
 
 			} );
 
-			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
-
 			response.trending.forEach( function( d ) {
 				if ( typeof xmax === 'undefined' || moment( d.end_time ).isAfter( moment( xmax ) ) ) {
 					xmax = d.end_time;
 				}
 			} );
+
+			this._viz.secondsRange = moment( xmax ).diff( moment( xmin ), 'seconds' );
 
 			this._createClusterDropdown( response.trending );
 
@@ -44002,19 +44005,46 @@ module.exports = Marionette.View.extend( {
 
 			this._viz.els.scroller[0].addEventListener( 'wheel', function ( e ) {
 				if ( Math.abs( e.deltaX ) > Math.abs( e.deltaY ) ) {
+					var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+					var scrollLeft = this._viz.els.scroller.scrollLeft()
 
-					var timestamp = this._viz.els.scroller.scrollLeft() / ( this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width() ) * this._viz.secondsRange;
+					var fraction = scrollLeft / scrollWidth
+
+					var timestamp = fraction * this._viz.secondsRange;
+
+					this.scrub();
 
 					TOME.app.trigger( 'debate:time:update', { source: 'wheel', to: timestamp } );
 
 				}
 			}.bind(this));
 
+			this._viz.els.scroller[0].addEventListener('wheel', _.debounce(this.scrubEnd, 150));
+
 		}.bind( this ) );
 
 	},
 
+	scrub: function() {
+		if(this.playing === true) {
+			this.interruptedPlay = true;
+		}
+
+		TOME.app.trigger( 'debate:video:pause' );
+	},
+
+	scrubEnd: function() {
+		if(this.interruptedPlay) {
+			TOME.app.trigger( 'debate:video:play' );
+			this.interruptedPlay = false;
+		} else {
+			TOME.app.trigger( 'debate:video:pause' );
+		}
+	},
+
 	initialize: function () {
+		this.scrub = this.scrub.bind(this);
+		this.scrubEnd = this.scrubEnd.bind(this);
 
 		this._viz = {
 			url: 'data/trends-1.json',
@@ -44029,6 +44059,14 @@ module.exports = Marionette.View.extend( {
 			horizontalPadding: this._viz.horizontalPadding
 		};
 
+		this.listenTo( TOME.app, 'debate:time:update', function(params) {
+			if(params.source !== 'wheel') {
+				var scrollWidth = this._viz.els.scroller[0].scrollWidth - this._viz.els.scroller.width()
+
+				this._viz.els.scroller[0].scrollLeft = Math.max(0, Math.min(scrollWidth, params.to / this._viz.secondsRange) * scrollWidth)
+			}
+		}.bind(this));
+
 		this.listenTo( TOME.app, 'debate:sparkline:activated', function ( params ) {
 
 			var scrollerLeft = this._viz.els.scroller[0].getBoundingClientRect().left;
@@ -44040,6 +44078,28 @@ module.exports = Marionette.View.extend( {
 			TOME.app.trigger( 'debate:time:update', { source: 'sparkline', to: timestamp } );
 
 		}.bind( this ) );
+
+		this.listenTo(TOME.app, 'debate:scrubber:mouseup', this.scrubEnd);
+
+		this.listenTo(TOME.app, 'debate:scrubber:mousedown', this.scrub);
+
+		this.listenTo(TOME.app, 'debate:controls:click', function() {
+			this.playing = !this.playing;
+
+			if(this.playing) {
+				TOME.app.trigger( 'debate:video:play' );
+			} else {
+				TOME.app.trigger( 'debate:video:pause' );
+			}
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:video:play', function() {
+			this.playing = true;
+		}.bind(this));
+
+		this.listenTo(TOME.app, 'debate:video:pause', function() {
+			this.playing = false;
+		}.bind(this));
 
 	}
 
@@ -44058,18 +44118,16 @@ module.exports = Marionette.View.extend( {
 	template: debateScrubberSubmoduleTemplate,
 
 	onAttach: function () {
-
+		var controls = this.$el.find(".controls");
 		var scrubber = this.$el.find( '#debate-viz-scrubber-bar' );
 		var scrubberPlayedRect = this.$el.find( '#debate-viz-scrubber-played-rect' );
 		var scrubberArea = this.$el.find( '#debate-viz-scrubber-area' );
 
 		var dragging;
 		var mouseX;
-		var interruptedPlay = false;
 		var active = false;
-		var playing = false;
 		var scrubberWidth = scrubber.width();
-		var scrubberAreaWidth = scrubberArea.width() - 15;
+		var scrubberAreaWidth = scrubberArea.width();
 		var scrubberAreaOffsetLeft = scrubberArea[0].getBoundingClientRect().left;
 		var totalSeconds;
 
@@ -44093,51 +44151,31 @@ module.exports = Marionette.View.extend( {
 		}.bind( this ) );
 
 		window.addEventListener( 'mouseup', function () {
-
-			dragging = false;
-
-			if ( interruptedPlay ) {
-
-				TOME.app.trigger( 'debate:video:play' );
-
-				interruptedPlay = false;
-
-			} else {
-
-				TOME.app.trigger( 'debate:video:pause' );
-
+			if(dragging) {
+				TOME.app.trigger('debate:scrubber:mouseup');			
 			}
-
+			dragging = false;
 		}.bind( this ) );
 
 		scrubber.on( 'mousedown', function () {
-
 			dragging = true;
 
-			if ( playing ) {
-				interruptedPlay = true;
-			}
-
-			TOME.app.trigger( 'debate:video:pause' );
+			TOME.app.trigger('debate:scrubber:mousedown');
 
 		}.bind( this ) );
 
-		this.$el.find( '.controls' ).on( 'click', function () {
-
+		controls.on( 'click', function () {
 			if ( active ) {
-
-				playing = !playing;
-
-				this.$el.find( '.controls' ).toggleClass( 'playing' );
-
-				if ( playing ) {
-					TOME.app.trigger( 'debate:video:play' );
-				} else {
-					TOME.app.trigger( 'debate:video:pause' );
-				}
+				controls.toggleClass( 'playing' );
+				TOME.app.trigger('debate:controls:click');
 			}
 
 		}.bind( this ) );
+
+		this.listenTo( TOME.app, 'debate:video:ready', function() {
+			active = true;
+			controls.attr("data-active", true);
+		}.bind(this));
 
 		this.listenTo( TOME.app, 'debate:data:fetched', function ( params ) {
 			totalSeconds = moment( params.xmax ).diff( moment( params.xmin ), 'seconds' );
@@ -44147,6 +44185,7 @@ module.exports = Marionette.View.extend( {
 		this.listenTo( TOME.app, 'debate:time:update', function ( params ) {
 			if ( params.source !== 'scrubber' ) {
 				var left = Math.max( 0, Math.min( scrubberAreaWidth - scrubberWidth, ( params.to / totalSeconds ) * scrubberAreaWidth ) );
+
 				scrubber.css( 'left', left );
 				scrubberPlayedRect.css( 'width', left );
 			}
@@ -44215,6 +44254,10 @@ module.exports = Marionette.View.extend( {
 
 	className: 'submodule',
 
+	playRAFID: null,
+
+	playing: false,
+
 	template: debateVideoSubmoduleTemplate,
 
 	_createYouTubeScript: function () {
@@ -44237,6 +44280,7 @@ module.exports = Marionette.View.extend( {
 					onReady: function () {
 						this._viz.ready = true;
 						this._viz.duration = this._viz.player.getDuration();
+						TOME.app.trigger('debate:video:ready');
 					}.bind( this )
 				}
 			} )
@@ -44245,12 +44289,52 @@ module.exports = Marionette.View.extend( {
 
 	},
 
+	onAttach: function() {
+		this.listenTo(TOME.app, 'debate:video:play', this.play);
+
+		this.listenTo(TOME.app, 'debate:video:pause', this.pause);
+
+		this.listenTo(TOME.app, 'debate:time:update', this.scrubTo)
+	},
+
 	initialize: function () {
 
 		this._viz = {};
 
 		this._createYouTubeScript();
 
+		this.playRAF = this.playRAF.bind(this);
+
+	},
+
+	playRAF: function() {
+		TOME.app.trigger('debate:time:update', {
+			source: 'video', to: this._viz.player.getCurrentTime()
+		});
+		if(this.playing === true) {
+			this.playRAFID = requestAnimationFrame(this.playRAF);
+		}
+	},
+
+	scrubTo: function(params) {
+		if(params.source !== 'video') {
+			this._viz.player.seekTo(params.to);
+			this.pause();
+		}
+	},
+
+	play: function() {
+		this._viz.player.playVideo();
+
+		this.playing = true;
+
+		this.playRAFID = this.playRAF();
+	},
+
+	pause: function() {
+		this._viz.player.pauseVideo();
+
+		this.playing = false;
 	}
 
 } );
