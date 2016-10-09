@@ -114,7 +114,7 @@ module.exports = Marionette.View.extend( {
 
 		d3.json( this._viz.url, function ( response ) {
 
-			var xmin = '2016-09-27 00:55:30'; // This is the exact moment in time our video starts streaming
+			var xmin = '2016-09-27 00:57:00'; // This is the exact moment in time our video starts streaming
 			var xmax;
 
 			response.trending.sort( function( a, b ) {
